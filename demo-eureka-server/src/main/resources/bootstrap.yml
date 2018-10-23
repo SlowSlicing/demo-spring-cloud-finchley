@@ -1,6 +1,18 @@
 server:
   # 项目端口号
   port: 8761
+  # SSL 配置
+  ssl:
+    # 开启 SSL 认证
+    enabled: true
+    # 证书别名
+    key-alias: eurekaserver
+    # 证书存放路径
+    key-store: classpath:EurekaServer.p12
+    # 证书密码
+    key-store-password: 123456
+    # 存储类型
+    key-store-type: PKCS12
 
 spring:
   application:
@@ -19,6 +31,15 @@ eureka:
     hostname: localhost
     # 使用 ip 注册到注册中心实例化
     prefer-ip-address: true
+    # 安全端口
+    secure-port: ${server.port}
+    # 指示是否应为流量启用安全端口
+    secure-port-enabled: true
+    # 关闭非安全端口
+    non-secure-port-enabled: false
+    home-page-url: https://${eureka.instance.hostname}:${server.port}/
+    status-page-url: https://${eureka.instance.hostname}:${server.port}/actuator/info
+    health-check-url: https://${eureka.instance.hostname}:${server.port}/actuator/health
   client:
     # 此实例是否从注册中心获取注册信息
     fetch-registry: false
@@ -27,7 +48,7 @@ eureka:
     # 注册地址
     service-url:
       # 默认注册分区地址
-      defaultZone: http://${eureka.instance.hostname}:8761/eureka/
+      defaultZone: https://${eureka.instance.hostname}:${server.port}/eureka/
   server:
     # 同步为空时，等待时间
     wait-time-in-ms-when-sync-empty: 0
