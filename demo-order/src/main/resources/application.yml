@@ -11,12 +11,12 @@ spring:
 eureka:
   instance:
     # 主机名
-    # hostname: localhost
+    hostname: localhost
     # 使用 ip 注册到注册中心实例化
     prefer-ip-address: true
   client:
     # Spring Cloud Eureka 注册中心地址
     service-url:
-      defaultZone: 'http://localhost:8761/eureka/'
+      defaultZone: http://${eureka.instance.hostname}:8761/eureka/
     # 针对新服务上线, Eureka client获取不及时的问题，在测试环境，可以适当提高Client端拉取Server注册信息的频率，默认：30秒
     registry-fetch-interval-seconds: 30
