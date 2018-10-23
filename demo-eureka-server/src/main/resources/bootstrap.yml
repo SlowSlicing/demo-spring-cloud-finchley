@@ -1,7 +1,3 @@
-server:
-  # 项目端口号
-  port: 8761
-
 spring:
   application:
     name: demo-eureka-server
@@ -9,16 +5,9 @@ spring:
 eureka:
   instance:
     # 主机名
-    hostname: localhost
-  client:
-    # 此实例是否从注册中心获取注册信息
-    fetch-registry: false
-    # 是否将此实例注册到注册中心
-    register-with-eureka: false
-    # 注册地址
-    service-url:
-      # 默认注册分区地址
-      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+    # hostname: localhost
+    # 使用 ip 注册到注册中心实例化
+    prefer-ip-address: true
   server:
     # 同步为空时，等待时间
     wait-time-in-ms-when-sync-empty: 0
@@ -27,3 +16,15 @@ eureka:
     ## Eureka client端与Server端之间有个租约，Client要定时发送心跳来维持这个租约，表示自己还存活着。 Eureka通过当前注册的实例数，去计算每分钟应该从应用实例接收到的心跳数，如果最近一分钟接收到的续约的次数小于指定阈值的话，则关闭租约失效剔除，禁止定时任务剔除失效的实例，从而保护注册信息。
     # 此处关闭可以防止问题（测试环境可以设置为false）：Eureka server由于开启并引入了SELF PRESERVATION模式，导致registry的信息不会因为过期而被剔除掉，直到退出SELF PRESERVATION模式才能剔除。
     enable-self-preservation: false
+    # 指定 Eviction Task 定时任务的调度频率，用于剔除过期的实例，此处未使用默认频率，频率为：5/秒，默认为：60/秒
+    # 有效防止的问题是：应用实例异常挂掉，没能在挂掉之前告知Eureka server要下线掉该服务实例信息。这个就需要依赖Eureka server的EvictionTask去剔除。
+    eviction-interval-timer-in-ms: 5000
+    # 设置read Write CacheMap的expire After Write参数，指定写入多长时间后过期
+    # 有效防止的问题是：应用实例下线时有告知Eureka server下线，但是由于Eureka server的REST API有response cache，因此需要等待缓存过期才能更新
+    response-cache-auto-expiration-in-seconds: 60
+    # 此处不开启缓存，上方配置开启一个即可
+    # use-read-only-response-cache: false
+    # 指定每分钟需要收到的续约次数的阈值，默认值就是：0.85
+    renewal-percent-threshold: 0.85
+    # 续约频率提高，默认：30
+    leaseRenewalIntervalInseconds: 10
