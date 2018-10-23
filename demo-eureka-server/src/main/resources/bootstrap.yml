@@ -1,6 +1,17 @@
+server:
+  # 项目端口号
+  port: 8761
+
 spring:
   application:
     name: demo-eureka-server
+  # 开启安全控制
+  security:
+    user:
+      # 用户名
+      name: eureka-server
+      # 密码
+      password: 8e9lx7LuP3436gfsg
 
 eureka:
   instance:
@@ -8,6 +19,15 @@ eureka:
     hostname: localhost
     # 使用 ip 注册到注册中心实例化
     prefer-ip-address: true
+  client:
+    # 此实例是否从注册中心获取注册信息
+    fetch-registry: false
+    # 是否将此实例注册到注册中心
+    register-with-eureka: false
+    # 注册地址
+    service-url:
+      # 默认注册分区地址
+      defaultZone: http://${eureka.instance.hostname}:8761/eureka/
   server:
     # 同步为空时，等待时间
     wait-time-in-ms-when-sync-empty: 0
