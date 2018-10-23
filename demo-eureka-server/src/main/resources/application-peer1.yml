@@ -1,0 +1,16 @@
+server:
+  # 项目端口号
+  port: 8761
+
+eureka:
+  client:
+    # 此实例是否从注册中心获取注册信息
+    fetch-registry: true
+    # 是否将此实例注册到注册中心
+    register-with-eureka: true
+    # 针对新服务上线, Eureka client获取不及时的问题，在测试环境，可以适当提高Client端拉取Server注册信息的频率，默认：30秒
+    registry-fetch-interval-seconds: 30
+    # 注册地址
+    service-url:
+      # 默认注册分区地址
+      defaultZone: http://${eureka.instance.hostname}:8762/eureka/,http://${eureka.instance.hostname}:8763/eureka/
