@@ -20,11 +20,20 @@
 
     <dependencies>
         <!-- Spring Cloud 相关 START -->
+        <!-- Spring Cloud Netflix Eureka Server -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
         </dependency>
         <!-- Spring Cloud 相关 END -->
+
+        <!-- Spring Boot 相关 START -->
+        <!-- 安全 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <!-- Spring Boot 相关 END -->
     </dependencies>
 
 </project>

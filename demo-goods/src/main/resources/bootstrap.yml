@@ -1,0 +1,30 @@
+server:
+  # \u9879\u76EE\u7AEF\u53E3\u53F7
+  port: 11200
+
+spring:
+  application:
+    # Spring Boot \u9879\u76EE\u5B9E\u4F8B\u540D\u79F0
+    name: demo-goods
+
+### \u6CE8\u518C\u4E2D\u5FC3\u914D\u7F6E
+eureka:
+  instance:
+    # \u4E3B\u673A\u540D
+    hostname: localhost
+    # \u4F7F\u7528 ip \u6CE8\u518C\u5230\u6CE8\u518C\u4E2D\u5FC3\u5B9E\u4F8B\u5316
+    prefer-ip-address: true
+  client:
+    secure-port-enabled: true
+    ssl:
+      key-store: EurekaClient.p12
+      key-store-password: 123456
+    security:
+      user:
+        name: eureka-server
+        password: 8e9lx7LuP3436gfsg
+    # Spring Cloud Eureka \u6CE8\u518C\u4E2D\u5FC3\u5730\u5740
+    service-url:
+      defaultZone: https://${eureka.client.security.user.name}:${eureka.client.security.user.password}@${eureka.instance.hostname}:8761/eureka/
+    # \u9488\u5BF9\u65B0\u670D\u52A1\u4E0A\u7EBF, Eureka client\u83B7\u53D6\u4E0D\u53CA\u65F6\u7684\u95EE\u9898\uFF0C\u5728\u6D4B\u8BD5\u73AF\u5883\uFF0C\u53EF\u4EE5\u9002\u5F53\u63D0\u9AD8Client\u7AEF\u62C9\u53D6Server\u6CE8\u518C\u4FE1\u606F\u7684\u9891\u7387\uFF0C\u9ED8\u8BA4\uFF1A30\u79D2
+    registry-fetch-interval-seconds: 30

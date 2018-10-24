@@ -21,6 +21,7 @@
     <modules>
         <module>demo-eureka-server</module>
         <module>demo-order</module>
+        <module>demo-goods</module>
     </modules>
 
     <properties>
