@@ -18,7 +18,7 @@ import java.security.cert.CertificateException;
 
 /**
  * @Author：大漠知秋
- * @Description：Eureka Client HTTPS 配置
+ * @Description：Eureka Client 针对 Eureka Server 的 HTTPS 请求配置
  * @CreateDate：4:13 PM 2018/10/23
  */
 @Data
