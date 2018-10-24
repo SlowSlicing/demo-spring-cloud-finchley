@@ -2,6 +2,7 @@ package com.lynchj.demoorder.controller;
 
 import com.lynchj.demoorder.feign.GitHubFeign;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,7 +29,7 @@ public class GitHubController {
             value = "/search/repositories",
             method = RequestMethod.GET
     )
-    String searchRepo(@RequestParam("q") String q) {
+    ResponseEntity<byte[]> searchRepo(@RequestParam("q") String q) {
         return gitHubFeign.searchRepo(q);
     }
 

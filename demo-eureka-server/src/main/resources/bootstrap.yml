@@ -41,6 +41,10 @@ eureka:
     status-page-url: https://${eureka.instance.hostname}:${server.port}/actuator/info
     health-check-url: https://${eureka.instance.hostname}:${server.port}/actuator/health
   client:
+    secure-port-enabled: true
+    ssl:
+      key-store: EurekaClient.p12
+      key-store-password: 123456
     # 此实例是否从注册中心获取注册信息
     fetch-registry: false
     # 是否将此实例注册到注册中心

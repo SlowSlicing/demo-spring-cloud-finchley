@@ -30,3 +30,22 @@ eureka:
     registry-fetch-interval-seconds: 30
     # 当 Eureka Server 不可用时，这时就获取不到 注册列表，当从此类进行获取注册列表
     backup-registry-impl: com.lynchj.demoorder.config.StaticBackupServiceRegistry
+
+### Feign 配置
+feign:
+  compression:
+    request:
+      # 开启请求压缩
+      enabled: true
+      # 配置压缩的 MIME TYPE
+      mime-types: text/xml,application/xml,application/json
+      # 配置压缩数据大小的下限
+      min-request-size: 2048
+    response:
+      # 开启响应压缩
+      enabled: true
+
+### Feign Logger Level 配置
+logging:
+  level:
+    com.lynchj.demoorder.feign.GoodsFeign: debug
