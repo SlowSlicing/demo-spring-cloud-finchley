@@ -28,3 +28,5 @@ eureka:
       defaultZone: https://${eureka.client.security.user.name}:${eureka.client.security.user.password}@${eureka.instance.hostname}:8761/eureka/
     # 针对新服务上线, Eureka client获取不及时的问题，在测试环境，可以适当提高Client端拉取Server注册信息的频率，默认：30秒
     registry-fetch-interval-seconds: 30
+    # 当 Eureka Server 不可用时，这时就获取不到 注册列表，当从此类进行获取注册列表
+    backup-registry-impl: com.lynchj.demoorder.config.StaticBackupServiceRegistry
