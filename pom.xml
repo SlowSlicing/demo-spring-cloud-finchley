@@ -30,6 +30,7 @@
         <java.version>1.8</java.version>
         <spring-cloud.version>Finchley.RELEASE</spring-cloud.version>
         <alibaba-fastjson.version>1.2.47</alibaba-fastjson.version>
+        <feign-httpclient.version>8.18.0</feign-httpclient.version>
     </properties>
 
     <dependencyManagement>
@@ -115,5 +116,20 @@
         </dependency>
         <!-- 第三方工具 END -->
     </dependencies>
+
+    <build>
+        <!-- 资源配置 -->
+        <resources>
+            <!-- 不进行自动编码操作 -->
+            <resource>
+                <directory>${basedir}/src/main/resources</directory>
+                <includes>
+                    <include>**/*.p12</include>
+                    <include>**/*.yml</include>
+                </includes>
+                <filtering>false</filtering>
+            </resource>
+        </resources>
+    </build>
 
 </project>

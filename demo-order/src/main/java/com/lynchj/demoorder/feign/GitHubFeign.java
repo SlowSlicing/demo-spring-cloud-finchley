@@ -2,6 +2,7 @@ package com.lynchj.demoorder.feign;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,6 +20,6 @@ public interface GitHubFeign {
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE
     )
-    String searchRepo(@RequestParam("q") String q);
+    ResponseEntity<byte[]> searchRepo(@RequestParam("q") String q);
 
 }

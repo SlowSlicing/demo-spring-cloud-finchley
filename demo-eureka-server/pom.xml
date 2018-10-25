@@ -34,6 +34,14 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
         <!-- Spring Boot 相关 END -->
+
+        <!-- 第三方工具 START -->
+        <!-- Http Client 支持 -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+        </dependency>
+        <!-- 第三方工具 END -->
     </dependencies>
 
 </project>

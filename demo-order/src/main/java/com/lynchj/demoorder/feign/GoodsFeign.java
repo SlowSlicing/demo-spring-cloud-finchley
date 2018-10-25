@@ -18,6 +18,6 @@ public interface GoodsFeign {
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE
     )
-    public String getPort();
+    String getPort();
 
 }
