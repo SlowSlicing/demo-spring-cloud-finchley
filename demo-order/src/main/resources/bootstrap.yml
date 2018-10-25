@@ -47,6 +47,21 @@ feign:
   # 开启断路器（熔断器）
   hystrix:
     enabled: true
+  httpclient:
+    # 是否开启 Http Client
+    enabled: false
+#    # 最大连接数，默认：200
+#    max-connections: 200
+#    # 最大路由，默认：50
+#    max-connections-per-route: 50
+#    # 连接超时，默认：2000/毫秒
+#    connection-timeout: 2000
+#    # 生存时间，默认：900L
+#    time-to-live: 900
+#    # 响应超时的时间单位，默认：TimeUnit.SECONDS
+##    timeToLiveUnit: SECONDS
+  okhttp:
+    enabled: true
 
 ### Feign Logger Level 配置
 logging:
@@ -69,8 +84,8 @@ hystrix:
   command:
     default:
       circuitBreaker:
-        # 当在配置时间窗口内达到此数量的失败后，进行短路。默认20个
-        requestVolumeThreshold: 1
+        # 当在配置时间窗口内达到此数量的失败后，进行短路。默认：20个
+        requestVolumeThreshold: 20
         # 触发短路的时间值，当该值设为5000时，则当触发 circuit break 后的5000毫秒内都会拒绝request
         # 也就是5000毫秒后才会关闭circuit。默认5000
         sleepWindowInMilliseconds: 15000
