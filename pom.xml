@@ -31,6 +31,8 @@
         <spring-cloud.version>Finchley.RELEASE</spring-cloud.version>
         <alibaba-fastjson.version>1.2.47</alibaba-fastjson.version>
         <feign-httpclient.version>8.18.0</feign-httpclient.version>
+        <feign-form.version>3.0.3</feign-form.version>
+        <feign-form-spring.version>3.0.3</feign-form-spring.version>
     </properties>
 
     <dependencyManagement>
