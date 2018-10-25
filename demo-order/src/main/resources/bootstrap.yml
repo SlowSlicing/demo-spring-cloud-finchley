@@ -44,8 +44,42 @@ feign:
     response:
       # 开启响应压缩
       enabled: true
+  # 开启断路器（熔断器）
+  hystrix:
+    enabled: true
 
 ### Feign Logger Level 配置
 logging:
   level:
     com.lynchj.demoorder.feign.GoodsFeign: debug
+
+### Ribbon 配置
+ribbon:
+  # 连接超时
+  ConnectTimeout: 2000
+  # 响应超时
+  ReadTimeout: 5000
+
+### Hystrix 配置
+hystrix:
+  # 这样将会自动配置一个 Hystrix 并发策略插件的 hook，这个 hook 会将 SecurityContext 从主线程传输到 Hystrix 的命令。
+  # 因为 Hystrix 不允许注册多个 Hystrix 策略，所以可以声明 HystrixConcurrencyStrategy
+  # 为一个 Spring bean 来实现扩展。Spring Cloud 会在 Spring 的上下文中查找你的实现，并将其包装在自己的插件中。
+  shareSecurityContext: true
+  command:
+    default:
+      circuitBreaker:
+        # 当在配置时间窗口内达到此数量的失败后，进行短路。默认20个
+        requestVolumeThreshold: 1
+        # 触发短路的时间值，当该值设为5000时，则当触发 circuit break 后的5000毫秒内都会拒绝request
+        # 也就是5000毫秒后才会关闭circuit。默认5000
+        sleepWindowInMilliseconds: 15000
+        # 强制打开熔断器，如果打开这个开关，那么拒绝所有request，默认false
+        forceOpen: false
+        # 强制关闭熔断器 如果这个开关打开，circuit将一直关闭且忽略，默认false
+        forceClosed: false
+      execution:
+        isolation:
+          thread:
+            # 熔断器超时时间，默认：1000/毫秒
+            timeoutInMilliseconds: 5000
