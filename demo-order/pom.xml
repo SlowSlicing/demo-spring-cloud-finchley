@@ -30,6 +30,11 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
+        <!-- Spring Cloud Ribbon -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-netflix-ribbon</artifactId>
+        </dependency>
         <!-- Spring Cloud 相关 END -->
 
         <!-- 第三方工具 START -->

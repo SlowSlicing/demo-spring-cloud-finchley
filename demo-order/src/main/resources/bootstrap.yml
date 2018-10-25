@@ -44,7 +44,7 @@ feign:
     response:
       # 开启响应压缩
       enabled: true
-  # 开启断路器（熔断器）
+  # 是否开启断路器（熔断器）
   hystrix:
     enabled: true
   httpclient:
@@ -98,3 +98,6 @@ hystrix:
           thread:
             # 熔断器超时时间，默认：1000/毫秒
             timeoutInMilliseconds: 5000
+        timeout:
+          # 禁用熔断器超时时间，不推荐
+#          enabled: false
