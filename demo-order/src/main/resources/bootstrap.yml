@@ -75,6 +75,12 @@ ribbon:
   # 响应超时
   ReadTimeout: 5000
 
+### 针对单个服务的 Ribbon 配置
+demo-goods:
+  ribbon:
+    # 基于配置文件形式的 针对单个服务的 Ribbon 负载均衡策略
+    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule
+
 ### Hystrix 配置
 hystrix:
   # 这样将会自动配置一个 Hystrix 并发策略插件的 hook，这个 hook 会将 SecurityContext 从主线程传输到 Hystrix 的命令。
