@@ -20,12 +20,14 @@ public class HystrixIntroductionController {
         if ("SpringCloud".equals(username)) {
             return "Hello " + username;
         } else {
-            throw new RuntimeException();
+            throw new RuntimeException("哈哈哈，出错了");
+//            throw new HystrixBadRequestException("Test");
         }
 
     }
 
-    public String fallbackGetUser(String username) {
+    public String fallbackGetUser(String username, Throwable throwable) {
+        System.err.println(throwable.fillInStackTrace());
         return "No Hello " + username;
     }
 
