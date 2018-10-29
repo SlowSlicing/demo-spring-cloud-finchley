@@ -6,6 +6,11 @@ spring:
   application:
     # Spring Boot 项目实例名称
     name: demo-order
+  boot:
+    admin:
+      client:
+        # 基于 Spring Boot 项目的监控地址
+        url: 'http://localhost:1700'
 
 ### 日志配置
 logback:
@@ -19,8 +24,8 @@ management:
   endpoints:
     web:
       exposure:
-        # 开启指定端点
-        include: 'hystrix.stream'
+        # 开启指定端点、所有端点
+        include: '*'
 
 ### 注册中心配置
 eureka:
@@ -88,7 +93,7 @@ ribbon:
   # http建立socket超时时间,毫秒
   ConnectTimeout: 2000
   # http读取响应socket超时时间
-  ReadTimeout: 10000
+  ReadTimeout: 8000
   # 同一台实例最大重试次数,不包括首次调用
   MaxAutoRetries: 0
   # 重试负载均衡其他的实例最大重试次数,不包括首次server
@@ -134,21 +139,38 @@ hystrix:
   shareSecurityContext: true
   command:
     default:
+      # 断路器配置
       circuitBreaker:
         # 当在配置时间窗口内达到此数量的失败后，进行断路。默认：20个
         requestVolumeThreshold: 20
+        # 出错百分比阈值，当达到此阈值后，开始断路。默认：50%
+        errorThresholdpercentage: 50
         # 触发短路的时间值，当该值设为5000时，则当触发 circuit break 后的5000毫秒内都会拒绝request
-        # 也就是5000毫秒后才会关闭circuit。默认5000
-        sleepWindowInMilliseconds: 15000
+        # 也就是5000毫秒后才会关闭circuit。默认：5000
+        sleepWindowInMilliseconds: 5000
         # 强制打开断路器，如果打开这个开关，那么拒绝所有request，默认false
         forceOpen: false
         # 强制关闭断路器 如果这个开关打开，circuit将一直关闭且忽略，默认false
         forceClosed: false
       execution:
+        # 熔断器配置
         isolation:
           thread:
             # 熔断器超时时间，默认：1000/毫秒
             timeoutInMilliseconds: 18000
+            # 超时时是否立马中断
+            interruptOnTimeout: true
+          semaphore:
+            # 信号量请求数，当设置为信号量隔离策略时，设置最大允许的请求数
+            maxConcurrentRequests: 10
 #        timeout:
 #          # 禁用熔断器超时时间，不推荐
 #          enabled: false
+  threadpool:
+    defalut:
+      # 当使用线程隔离策略时，线程池的核心大小
+      coreSize: 10
+      # 当 Hystrix 隔离策略为线程池隔离模式时，最大线程池大小的配置，在 `1.5.9` 版本中还需要配置 `allowMaximumSizeToDivergeFromCoreSize` 为 true
+      maximumSize: 10
+      # 此属性语序配置的 maximumSize 生效
+      allowMaximumSizeToDivergeFromCoreSize: true

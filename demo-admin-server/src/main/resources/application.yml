@@ -1,11 +1,11 @@
 server:
   # \u9879\u76EE\u7AEF\u53E3\u53F7
-  port: 9090
+  port: 17000
 
 spring:
   application:
     # Spring Boot \u9879\u76EE\u5B9E\u4F8B\u540D\u79F0
-    name: demo-hystrix-dashboard
+    name: demo-admin-server
 
 ### \u65E5\u5FD7\u914D\u7F6E
 logback:
@@ -35,8 +35,3 @@ eureka:
       defaultZone: https://${eureka.client.security.user.name}:${eureka.client.security.user.password}@${eureka.instance.hostname}:8761/eureka/
     # \u9488\u5BF9\u65B0\u670D\u52A1\u4E0A\u7EBF, Eureka client\u83B7\u53D6\u4E0D\u53CA\u65F6\u7684\u95EE\u9898\uFF0C\u5728\u6D4B\u8BD5\u73AF\u5883\uFF0C\u53EF\u4EE5\u9002\u5F53\u63D0\u9AD8Client\u7AEF\u62C9\u53D6Server\u6CE8\u518C\u4FE1\u606F\u7684\u9891\u7387\uFF0C\u9ED8\u8BA4\uFF1A30\u79D2
     registry-fetch-interval-seconds: 30
-
-### Hystrix Turbin \u914D\u7F6E
-turbine:
-  app-config: demo-goods,demo-order
-  cluster-name-expression: "'default'"
