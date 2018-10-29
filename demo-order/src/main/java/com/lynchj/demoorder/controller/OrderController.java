@@ -1,0 +1,42 @@
+package com.lynchj.demoorder.controller;
+
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
+
+/**
+ * @Author：大漠知秋
+ * @Description Order 服务的 Controller
+ * @CreateDate：11:18 AM 2018/10/24
+ */
+@RestController
+@RequestMapping(
+        value = "/order",
+        produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+)
+public class OrderController {
+
+    @RequestMapping(
+            value = "/getPort",
+            method = RequestMethod.GET
+    )
+    public String getPort(HttpServletRequest request) {
+
+        return String.valueOf(request.getServerPort());
+
+    }
+
+    @RequestMapping(
+            value = "/getPort",
+            method = RequestMethod.POST
+    )
+    public String getPortByPost(HttpServletRequest request) {
+
+        return String.valueOf(request.getServerPort());
+
+    }
+
+}

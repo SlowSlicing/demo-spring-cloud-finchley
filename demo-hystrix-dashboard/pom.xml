@@ -20,12 +20,30 @@
 
     <dependencies>
         <!-- Spring Cloud 相关 START -->
+        <!-- Spring Cloud Netflix Eureka Client -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
         <!-- Spring Cloud Hystrix Dashboard -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-hystrix-dashboard</artifactId>
         </dependency>
+        <!-- Spring Cloud Hystrix Turbine -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-turbine</artifactId>
+        </dependency>
         <!-- Spring Cloud 相关 END -->
+
+        <!-- 第三方工具 START -->
+        <!-- Http Client 支持 -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+        </dependency>
+        <!-- 第三方工具 END -->
     </dependencies>
 
 </project>
