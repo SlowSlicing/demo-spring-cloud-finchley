@@ -20,4 +20,11 @@ public interface GoodsFeign {
     )
     String getPort();
 
+    @RequestMapping(
+            value = "/goods/getPort",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+    )
+    String getPortByPost();
+
 }

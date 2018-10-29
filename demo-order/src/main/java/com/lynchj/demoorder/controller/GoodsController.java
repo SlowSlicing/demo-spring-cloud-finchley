@@ -33,4 +33,14 @@ public class GoodsController {
 
     }
 
+    @RequestMapping(
+            value = "/getPort",
+            method = RequestMethod.POST
+    )
+    public String getPortByPost() {
+
+        return goodsFeign.getPortByPost();
+
+    }
+
 }
