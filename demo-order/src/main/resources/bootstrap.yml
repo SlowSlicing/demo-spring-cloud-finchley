@@ -14,6 +14,14 @@ logback:
   project:
     level: INFO
 
+### 端点控制
+management:
+  endpoints:
+    web:
+      exposure:
+        # 开启指定端点
+        include: 'hystrix.stream'
+
 ### 注册中心配置
 eureka:
   instance:

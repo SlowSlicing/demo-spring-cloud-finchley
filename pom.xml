@@ -22,6 +22,7 @@
         <module>demo-eureka-server</module>
         <module>demo-order</module>
         <module>demo-goods</module>
+        <module>demo-hystrix-dashboard</module>
     </modules>
 
     <properties>
@@ -128,7 +129,7 @@
                 <includes>
                     <include>**/*.p12</include>
                     <include>**/*.yml</include>
-                    <!--<include>**/*.xml</include>-->
+                    <include>**/*.xml</include>
                 </includes>
                 <filtering>false</filtering>
             </resource>
