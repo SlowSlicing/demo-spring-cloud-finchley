@@ -30,6 +30,16 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
+        <!-- Spring Cloud Ribbon -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-netflix-ribbon</artifactId>
+        </dependency>
+        <!-- Spring Cloud Hystrix -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+        </dependency>
         <!-- Spring Cloud 相关 END -->
 
         <!-- 第三方工具 START -->
@@ -39,11 +49,11 @@
             <artifactId>httpclient</artifactId>
         </dependency>
         <!-- Apache Http Client 对 Feign 支持 -->
-        <!--<dependency>-->
-            <!--<groupId>com.netflix.feign</groupId>-->
-            <!--<artifactId>feign-httpclient</artifactId>-->
-            <!--<version>${feign-httpclient.version}</version>-->
-        <!--</dependency>-->
+        <!--<dependency>
+            <groupId>com.netflix.feign</groupId>
+            <artifactId>feign-httpclient</artifactId>
+            <version>${feign-httpclient.version}</version>
+        </dependency>-->
         <!-- OKHttp 对 Feign 支持 -->
         <dependency>
             <groupId>io.github.openfeign</groupId>

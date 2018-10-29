@@ -3,7 +3,11 @@ package com.lynchj.demoorder;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+import org.springframework.cloud.netflix.hystrix.EnableHystrix;
 import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * @Author：大漠知秋
@@ -15,10 +19,21 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @EnableDiscoveryClient
 /** 开启 Feign 扫描支持 */
 @EnableFeignClients
+/** 启动断路器功能 */
+@EnableHystrix
 public class DemoOrderApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(DemoOrderApplication.class, args);
+    }
+
+    /**
+     * Ribbon Http 请求 客户端负载均衡器
+     */
+    @Bean
+    @LoadBalanced
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
     }
 
 }

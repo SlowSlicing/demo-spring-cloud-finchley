@@ -7,6 +7,21 @@ spring:
     # Spring Boot 项目实例名称
     name: demo-order
 
+### 日志配置
+logback:
+  spring:
+    level: INFO
+  project:
+    level: INFO
+
+### 端点控制
+management:
+  endpoints:
+    web:
+      exposure:
+        # 开启指定端点
+        include: 'hystrix.stream'
+
 ### 注册中心配置
 eureka:
   instance:
@@ -44,7 +59,7 @@ feign:
     response:
       # 开启响应压缩
       enabled: true
-  # 开启断路器（熔断器）
+  # 是否开启断路器（熔断器）
   hystrix:
     enabled: true
   httpclient:
@@ -57,7 +72,7 @@ feign:
 #    # 连接超时，默认：2000/毫秒
 #    connection-timeout: 2000
 #    # 生存时间，默认：900L
-#    time-to-live: 900
+##    time-to-live: 900
 #    # 响应超时的时间单位，默认：TimeUnit.SECONDS
 ##    timeToLiveUnit: SECONDS
   okhttp:
@@ -70,10 +85,46 @@ logging:
 
 ### Ribbon 配置
 ribbon:
-  # 连接超时
+  # http建立socket超时时间,毫秒
   ConnectTimeout: 2000
-  # 响应超时
-  ReadTimeout: 5000
+  # http读取响应socket超时时间
+  ReadTimeout: 10000
+  # 同一台实例最大重试次数,不包括首次调用
+  MaxAutoRetries: 0
+  # 重试负载均衡其他的实例最大重试次数,不包括首次server
+  MaxAutoRetriesNextServer: 1
+  # 是否所有操作都重试，POST请求注意多次提交错误。
+  # 默认false，设定为false的话，只有get请求会重试
+  OkToRetryOnAllOperations: true
+  # 饥饿加载
+  eager-load:
+    # 是否开启饥饿加载
+    enabled: true
+    # 饥饿加载的服务
+    clients: demo-goods,demo-product
+  # Eureka 配置
+#  eureka:
+#    # 禁止使用 Eureka 获取负载服务列表
+#    enabled: false
+
+### 针对单个服务的 Ribbon 配置
+demo-goods:
+  ribbon:
+    # 基于配置文件形式的 针对单个服务的 Ribbon 负载均衡策略
+    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule
+    # http建立socket超时时间,毫秒
+    ConnectTimeout: 2000
+    # http读取响应socket超时时间
+    ReadTimeout: 5000
+    # 同一台实例最大重试次数,不包括首次调用
+    MaxAutoRetries: 0
+    # 重试负载均衡其他的实例最大重试次数,不包括首次server
+    MaxAutoRetriesNextServer: 2
+    # 是否所有操作都重试，POST请求注意多次提交错误。
+    # 默认false，设定为false的话，只有get请求会重试
+    OkToRetryOnAllOperations: true
+    # 手动指定 Ribbon 服务列表
+#    listOfServers: http://localhost:11200,http://localhost:11201
 
 ### Hystrix 配置
 hystrix:
@@ -84,17 +135,20 @@ hystrix:
   command:
     default:
       circuitBreaker:
-        # 当在配置时间窗口内达到此数量的失败后，进行短路。默认：20个
+        # 当在配置时间窗口内达到此数量的失败后，进行断路。默认：20个
         requestVolumeThreshold: 20
         # 触发短路的时间值，当该值设为5000时，则当触发 circuit break 后的5000毫秒内都会拒绝request
         # 也就是5000毫秒后才会关闭circuit。默认5000
         sleepWindowInMilliseconds: 15000
-        # 强制打开熔断器，如果打开这个开关，那么拒绝所有request，默认false
+        # 强制打开断路器，如果打开这个开关，那么拒绝所有request，默认false
         forceOpen: false
-        # 强制关闭熔断器 如果这个开关打开，circuit将一直关闭且忽略，默认false
+        # 强制关闭断路器 如果这个开关打开，circuit将一直关闭且忽略，默认false
         forceClosed: false
       execution:
         isolation:
           thread:
             # 熔断器超时时间，默认：1000/毫秒
-            timeoutInMilliseconds: 5000
+            timeoutInMilliseconds: 18000
+#        timeout:
+#          # 禁用熔断器超时时间，不推荐
+#          enabled: false

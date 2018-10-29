@@ -29,4 +29,14 @@ public class GoodsController {
 
     }
 
+    @RequestMapping(
+            value = "/getPort",
+            method = RequestMethod.POST
+    )
+    public String getPortByPost(HttpServletRequest request) {
+
+        return String.valueOf(request.getServerPort());
+
+    }
+
 }

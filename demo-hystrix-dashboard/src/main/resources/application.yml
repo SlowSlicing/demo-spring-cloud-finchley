@@ -1,0 +1,23 @@
+server:
+  # \u9879\u76EE\u7AEF\u53E3\u53F7
+  port: 8080
+
+spring:
+  application:
+    # Spring Boot \u9879\u76EE\u5B9E\u4F8B\u540D\u79F0
+    name: demo-hystrix-dashboard
+
+### \u65E5\u5FD7\u914D\u7F6E
+logback:
+  spring:
+    level: INFO
+  project:
+    level: INFO
+
+### \u7AEF\u70B9\u63A7\u5236
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        # \u5F00\u542F\u6240\u6709\u7AEF\u70B9
+#        include: '*'
