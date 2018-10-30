@@ -15,11 +15,11 @@ import com.netflix.discovery.shared.Applications;
  *                  当然，这种情况就比较适用于服务端提供负载均衡或者服务 ip 地址相对固定的场景
  * @CreateDate：10:35 AM 2018/10/24
  */
-public class StaticBackupServiceRegistry implements BackupRegistry {
+public class StaticBackupRegistryListConfiguration implements BackupRegistry {
 
     private Applications localRegionApps = new Applications();
 
-    public StaticBackupServiceRegistry() {
+    public StaticBackupRegistryListConfiguration() {
         Application orgApplication = new Application("org");
         InstanceInfo orgInstancel1 = InstanceInfo.Builder.newBuilder()
                 .setAppName("demo-goods")
