@@ -24,6 +24,7 @@
         <module>demo-goods</module>
         <module>demo-hystrix-dashboard</module>
         <module>demo-admin-server</module>
+        <module>demo-api-zuul</module>
     </modules>
 
     <properties>
@@ -36,6 +37,7 @@
         <feign-form.version>3.0.3</feign-form.version>
         <feign-form-spring.version>3.0.3</feign-form-spring.version>
         <spring-boot-admin-starter-client.version>2.0.4</spring-boot-admin-starter-client.version>
+        <spring-boot-admin-starter-server.version>2.0.4</spring-boot-admin-starter-server.version>
     </properties>
 
     <dependencyManagement>

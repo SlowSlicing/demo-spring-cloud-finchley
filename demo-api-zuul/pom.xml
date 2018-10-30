@@ -4,12 +4,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.lynchj</groupId>
-    <artifactId>demo-admin-server</artifactId>
+    <artifactId>demo-api-zuul</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>demo-admin-server</name>
-    <description>演示样例 Admin 服务</description>
+    <name>demo-api-zuul</name>
+    <description>演示样例 Order 服务</description>
 
     <parent>
         <groupId>com.lynchj</groupId>
@@ -25,13 +25,29 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
         </dependency>
-        <!-- Spring Cloud Admin Server -->
+        <!-- Spring Cloud Netflix Zuul -->
         <dependency>
-            <groupId>de.codecentric</groupId>
-            <artifactId>spring-boot-admin-starter-server</artifactId>
-            <version>${spring-boot-admin-starter-server.version}</version>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-zuul</artifactId>
         </dependency>
         <!-- Spring Cloud 相关 END -->
+
+        <!-- Spring Boot 相关 START -->
+        <!-- Spring Cloud Admin Client -->
+        <dependency>
+            <groupId>de.codecentric</groupId>
+            <artifactId>spring-boot-admin-starter-client</artifactId>
+            <version>${spring-boot-admin-starter-client.version}</version>
+        </dependency>
+        <!-- Spring Boot 相关 END -->
+
+        <!-- Spring 相关 STAET -->
+        <!-- 重试 -->
+        <dependency>
+            <groupId>org.springframework.retry</groupId>
+            <artifactId>spring-retry</artifactId>
+        </dependency>
+        <!-- Spring 相关 END -->
 
         <!-- 第三方工具 START -->
         <!-- Http Client 支持 -->

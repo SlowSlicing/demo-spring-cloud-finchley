@@ -1,16 +1,21 @@
 server:
   # 项目端口号
-  port: 11100
+  port: 18000
 
 spring:
   application:
     # Spring Boot 项目实例名称
-    name: demo-order
+    name: demo-api-zuul
   boot:
     admin:
       client:
         # 基于 Spring Boot 项目的监控地址
         url: 'http://localhost:1700'
+  cloud:
+    loadbalancer:
+      retry:
+        # 重试开关，默认：true
+        enabled: true
 
 ### 日志配置
 logback:
@@ -25,7 +30,10 @@ management:
     web:
       exposure:
         # 开启指定端点、所有端点
-        include: '*'
+        include: 'hystrix.stream,routes,filters,info,health'
+  endpoint:
+    health:
+      show-details: always
 
 ### 注册中心配置
 eureka:
@@ -49,44 +57,7 @@ eureka:
     # 针对新服务上线, Eureka client获取不及时的问题，在测试环境，可以适当提高Client端拉取Server注册信息的频率，默认：30秒
     registry-fetch-interval-seconds: 30
     # 当 Eureka Server 不可用时，这时就获取不到 注册列表，当从此类进行获取注册列表
-    backup-registry-impl: com.lynchj.demoorder.config.StaticBackupRegistryListConfiguration
-
-### Feign 配置
-feign:
-  compression:
-    request:
-      # 开启请求压缩
-      enabled: true
-      # 配置压缩的 MIME TYPE
-      mime-types: text/xml,application/xml,application/json
-      # 配置压缩数据大小的下限
-      min-request-size: 2048
-    response:
-      # 开启响应压缩
-      enabled: true
-  # 是否开启断路器（熔断器）
-  hystrix:
-    enabled: true
-  httpclient:
-    # 是否开启 Http Client
-    enabled: false
-#    # 最大连接数，默认：200
-#    max-connections: 200
-#    # 最大路由，默认：50
-#    max-connections-per-route: 50
-#    # 连接超时，默认：2000/毫秒
-#    connection-timeout: 2000
-#    # 生存时间，默认：900L
-##    time-to-live: 900
-#    # 响应超时的时间单位，默认：TimeUnit.SECONDS
-##    timeToLiveUnit: SECONDS
-  okhttp:
-    enabled: true
-
-### Feign Logger Level 配置
-logging:
-  level:
-    com.lynchj.demoorder.feign.GoodsFeign: debug
+    backup-registry-impl: com.lynchj.demoapizuul.config.StaticBackupRegistryListConfiguration
 
 ### Ribbon 配置
 ribbon:
@@ -101,35 +72,6 @@ ribbon:
   # 是否所有操作都重试，POST请求注意多次提交错误。
   # 默认false，设定为false的话，只有get请求会重试
   OkToRetryOnAllOperations: true
-  # 饥饿加载
-  eager-load:
-    # 是否开启饥饿加载
-    enabled: true
-    # 饥饿加载的服务
-    clients: demo-goods,demo-product
-  # Eureka 配置
-#  eureka:
-#    # 禁止使用 Eureka 获取负载服务列表
-#    enabled: false
-
-### 针对单个服务的 Ribbon 配置
-demo-goods:
-  ribbon:
-    # 基于配置文件形式的 针对单个服务的 Ribbon 负载均衡策略
-    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule
-    # http建立socket超时时间,毫秒
-    ConnectTimeout: 2000
-    # http读取响应socket超时时间
-    ReadTimeout: 5000
-    # 同一台实例最大重试次数,不包括首次调用
-    MaxAutoRetries: 0
-    # 重试负载均衡其他的实例最大重试次数,不包括首次server
-    MaxAutoRetriesNextServer: 2
-    # 是否所有操作都重试，POST请求注意多次提交错误。
-    # 默认false，设定为false的话，只有get请求会重试
-    OkToRetryOnAllOperations: true
-    # 手动指定 Ribbon 服务列表
-#    listOfServers: http://localhost:11200,http://localhost:11201
 
 ### Hystrix 配置
 hystrix:
@@ -157,15 +99,15 @@ hystrix:
         isolation:
           thread:
             # 熔断器超时时间，默认：1000/毫秒
-            timeoutInMilliseconds: 18000
+            timeoutInMilliseconds: 20000
             # 超时时是否立马中断
             interruptOnTimeout: true
           semaphore:
             # 信号量请求数，当设置为信号量隔离策略时，设置最大允许的请求数
             maxConcurrentRequests: 10
-#        timeout:
-#          # 禁用熔断器超时时间，不推荐
-#          enabled: false
+  #        timeout:
+  #          # 禁用熔断器超时时间，不推荐
+  #          enabled: false
   threadpool:
     defalut:
       # 当使用线程隔离策略时，线程池的核心大小
@@ -174,3 +116,33 @@ hystrix:
       maximumSize: 10
       # 此属性语序配置的 maximumSize 生效
       allowMaximumSizeToDivergeFromCoreSize: true
+
+### 网关配置
+zuul:
+  # 路由信息配置
+  routes:
+    # 针对某个服务的配置，可自定义
+    demo-order:
+      # 访问的路径，此处要以 '/do/' 开头
+      path: /do/**
+      # 后端服务的实例 Id。
+      # 意思：以 '/do/' 开头的请求，都会向后端服务 'demo-order' 进行转发
+      serviceId: demo-order
+      # 剥夺前缀，此配置是针对上方 'path' 配置的项
+      # 为 true 的情况下：向后端转发之后是不会携带 '/do' 的。为 false 则相反
+      stripPrefix: true
+      # 不向后端服务传递的敏感头信息
+      sensitiveHeaders: Cookie,Set-Cookie,Authorization
+    demo-local:
+      # 访问的路径，此处要以 '/do/' 开头
+      path: /local/**
+      # 访问的 url，forward：向本地转发
+      url: forward:/local
+  # 忽略的服务，有些后端服务是不需要让网管代理的，防止服务侵入
+  ignored-services: service-a,service-b,config-server
+  # 忽略的接口，屏蔽接口
+  ignored-patterns: /**/div/**
+  # 此处解决后端服务重定向导致用户浏览的 host 变成 后端服务的 host 问题
+  add-host-header: true
+  # 开启重试机制，结合 Ribbon(默认集成)，只需配置即可，慎用，有些接口要考虑到幂等性，D 版之后默认：false
+  retryable: true
