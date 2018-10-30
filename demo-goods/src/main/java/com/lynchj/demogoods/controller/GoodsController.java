@@ -25,6 +25,7 @@ public class GoodsController {
     )
     public String getPort(HttpServletRequest request) {
 
+//        throw new RuntimeException();
         return String.valueOf(request.getServerPort());
 
     }

@@ -1,30 +1,46 @@
 server:
-  # \u9879\u76EE\u7AEF\u53E3\u53F7
+  # 项目端口号
   port: 18000
 
 spring:
   application:
-    # Spring Boot \u9879\u76EE\u5B9E\u4F8B\u540D\u79F0
+    # Spring Boot 项目实例名称
     name: demo-api-zuul
   boot:
     admin:
       client:
-        # \u57FA\u4E8E Spring Boot \u9879\u76EE\u7684\u76D1\u63A7\u5730\u5740
+        # 基于 Spring Boot 项目的监控地址
         url: 'http://localhost:1700'
+  cloud:
+    loadbalancer:
+      retry:
+        # 重试开关，默认：true
+        enabled: true
 
-### \u65E5\u5FD7\u914D\u7F6E
+### 日志配置
 logback:
   spring:
     level: INFO
   project:
     level: INFO
 
-### \u6CE8\u518C\u4E2D\u5FC3\u914D\u7F6E
+### 端点控制
+management:
+  endpoints:
+    web:
+      exposure:
+        # 开启指定端点、所有端点
+        include: 'hystrix.stream,routes,filters,info,health'
+  endpoint:
+    health:
+      show-details: always
+
+### 注册中心配置
 eureka:
   instance:
-    # \u4E3B\u673A\u540D
+    # 主机名
     hostname: localhost
-    # \u4F7F\u7528 ip \u6CE8\u518C\u5230\u6CE8\u518C\u4E2D\u5FC3\u5B9E\u4F8B\u5316
+    # 使用 ip 注册到注册中心实例化
     prefer-ip-address: true
   client:
     secure-port-enabled: true
@@ -35,35 +51,98 @@ eureka:
       user:
         name: eureka-server
         password: 8e9lx7LuP3436gfsg
-    # Spring Cloud Eureka \u6CE8\u518C\u4E2D\u5FC3\u5730\u5740
+    # Spring Cloud Eureka 注册中心地址
     service-url:
       defaultZone: https://${eureka.client.security.user.name}:${eureka.client.security.user.password}@${eureka.instance.hostname}:8761/eureka/
-    # \u9488\u5BF9\u65B0\u670D\u52A1\u4E0A\u7EBF, Eureka client\u83B7\u53D6\u4E0D\u53CA\u65F6\u7684\u95EE\u9898\uFF0C\u5728\u6D4B\u8BD5\u73AF\u5883\uFF0C\u53EF\u4EE5\u9002\u5F53\u63D0\u9AD8Client\u7AEF\u62C9\u53D6Server\u6CE8\u518C\u4FE1\u606F\u7684\u9891\u7387\uFF0C\u9ED8\u8BA4\uFF1A30\u79D2
+    # 针对新服务上线, Eureka client获取不及时的问题，在测试环境，可以适当提高Client端拉取Server注册信息的频率，默认：30秒
     registry-fetch-interval-seconds: 30
-    # \u5F53 Eureka Server \u4E0D\u53EF\u7528\u65F6\uFF0C\u8FD9\u65F6\u5C31\u83B7\u53D6\u4E0D\u5230 \u6CE8\u518C\u5217\u8868\uFF0C\u5F53\u4ECE\u6B64\u7C7B\u8FDB\u884C\u83B7\u53D6\u6CE8\u518C\u5217\u8868
+    # 当 Eureka Server 不可用时，这时就获取不到 注册列表，当从此类进行获取注册列表
     backup-registry-impl: com.lynchj.demoapizuul.config.StaticBackupRegistryListConfiguration
 
-### \u7F51\u5173\u914D\u7F6E
+### Ribbon 配置
+ribbon:
+  # http建立socket超时时间,毫秒
+  ConnectTimeout: 2000
+  # http读取响应socket超时时间
+  ReadTimeout: 8000
+  # 同一台实例最大重试次数,不包括首次调用
+  MaxAutoRetries: 0
+  # 重试负载均衡其他的实例最大重试次数,不包括首次server
+  MaxAutoRetriesNextServer: 1
+  # 是否所有操作都重试，POST请求注意多次提交错误。
+  # 默认false，设定为false的话，只有get请求会重试
+  OkToRetryOnAllOperations: true
+
+### Hystrix 配置
+hystrix:
+  # 这样将会自动配置一个 Hystrix 并发策略插件的 hook，这个 hook 会将 SecurityContext 从主线程传输到 Hystrix 的命令。
+  # 因为 Hystrix 不允许注册多个 Hystrix 策略，所以可以声明 HystrixConcurrencyStrategy
+  # 为一个 Spring bean 来实现扩展。Spring Cloud 会在 Spring 的上下文中查找你的实现，并将其包装在自己的插件中。
+  shareSecurityContext: true
+  command:
+    default:
+      # 断路器配置
+      circuitBreaker:
+        # 当在配置时间窗口内达到此数量的失败后，进行断路。默认：20个
+        requestVolumeThreshold: 20
+        # 出错百分比阈值，当达到此阈值后，开始断路。默认：50%
+        errorThresholdpercentage: 50
+        # 触发短路的时间值，当该值设为5000时，则当触发 circuit break 后的5000毫秒内都会拒绝request
+        # 也就是5000毫秒后才会关闭circuit。默认：5000
+        sleepWindowInMilliseconds: 5000
+        # 强制打开断路器，如果打开这个开关，那么拒绝所有request，默认false
+        forceOpen: false
+        # 强制关闭断路器 如果这个开关打开，circuit将一直关闭且忽略，默认false
+        forceClosed: false
+      execution:
+        # 熔断器配置
+        isolation:
+          thread:
+            # 熔断器超时时间，默认：1000/毫秒
+            timeoutInMilliseconds: 20000
+            # 超时时是否立马中断
+            interruptOnTimeout: true
+          semaphore:
+            # 信号量请求数，当设置为信号量隔离策略时，设置最大允许的请求数
+            maxConcurrentRequests: 10
+  #        timeout:
+  #          # 禁用熔断器超时时间，不推荐
+  #          enabled: false
+  threadpool:
+    defalut:
+      # 当使用线程隔离策略时，线程池的核心大小
+      coreSize: 10
+      # 当 Hystrix 隔离策略为线程池隔离模式时，最大线程池大小的配置，在 `1.5.9` 版本中还需要配置 `allowMaximumSizeToDivergeFromCoreSize` 为 true
+      maximumSize: 10
+      # 此属性语序配置的 maximumSize 生效
+      allowMaximumSizeToDivergeFromCoreSize: true
+
+### 网关配置
 zuul:
-  # \u8DEF\u7531\u4FE1\u606F\u914D\u7F6E
+  # 路由信息配置
   routes:
-    # \u9488\u5BF9\u67D0\u4E2A\u670D\u52A1\u7684\u914D\u7F6E\uFF0C\u53EF\u81EA\u5B9A\u4E49
+    # 针对某个服务的配置，可自定义
     demo-order:
-      # \u8BBF\u95EE\u7684\u8DEF\u5F84\uFF0C\u6B64\u5904\u8981\u4EE5 '/do/' \u5F00\u5934
+      # 访问的路径，此处要以 '/do/' 开头
       path: /do/**
-      # \u540E\u7AEF\u670D\u52A1\u7684\u5B9E\u4F8B Id\u3002
-      # \u610F\u601D\uFF1A\u4EE5 '/do/' \u5F00\u5934\u7684\u8BF7\u6C42\uFF0C\u90FD\u4F1A\u5411\u540E\u7AEF\u670D\u52A1 'demo-order' \u8FDB\u884C\u8F6C\u53D1
+      # 后端服务的实例 Id。
+      # 意思：以 '/do/' 开头的请求，都会向后端服务 'demo-order' 进行转发
       serviceId: demo-order
-      # \u5265\u593A\u524D\u7F00\uFF0C\u6B64\u914D\u7F6E\u662F\u9488\u5BF9\u4E0A\u65B9 'path' \u914D\u7F6E\u7684\u9879
-      # \u4E3A true \u7684\u60C5\u51B5\u4E0B\uFF1A\u5411\u540E\u7AEF\u8F6C\u53D1\u4E4B\u540E\u662F\u4E0D\u4F1A\u643A\u5E26 '/do' \u7684\u3002\u4E3A false \u5219\u76F8\u53CD
+      # 剥夺前缀，此配置是针对上方 'path' 配置的项
+      # 为 true 的情况下：向后端转发之后是不会携带 '/do' 的。为 false 则相反
       stripPrefix: true
-      # \u4E0D\u5411\u540E\u7AEF\u670D\u52A1\u4F20\u9012\u7684\u654F\u611F\u5934\u4FE1\u606F
+      # 不向后端服务传递的敏感头信息
       sensitiveHeaders: Cookie,Set-Cookie,Authorization
-  # \u5FFD\u7565\u7684\u670D\u52A1\uFF0C\u6709\u4E9B\u540E\u7AEF\u670D\u52A1\u662F\u4E0D\u9700\u8981\u8BA9\u7F51\u7BA1\u4EE3\u7406\u7684\uFF0C\u9632\u6B62\u670D\u52A1\u4FB5\u5165
+    demo-local:
+      # 访问的路径，此处要以 '/do/' 开头
+      path: /local/**
+      # 访问的 url，forward：向本地转发
+      url: forward:/local
+  # 忽略的服务，有些后端服务是不需要让网管代理的，防止服务侵入
   ignored-services: service-a,service-b,config-server
-  # \u5FFD\u7565\u7684\u63A5\u53E3\uFF0C\u5C4F\u853D\u63A5\u53E3
+  # 忽略的接口，屏蔽接口
   ignored-patterns: /**/div/**
-  # \u6B64\u5904\u89E3\u51B3\u540E\u7AEF\u670D\u52A1\u91CD\u5B9A\u5411\u5BFC\u81F4\u7528\u6237\u6D4F\u89C8\u7684 host \u53D8\u6210 \u540E\u7AEF\u670D\u52A1\u7684 host \u95EE\u9898
+  # 此处解决后端服务重定向导致用户浏览的 host 变成 后端服务的 host 问题
   add-host-header: true
-  # \u5F00\u542F\u91CD\u8BD5\u673A\u5236\uFF0C\u7ED3\u5408 Ribbon(\u9ED8\u8BA4\u96C6\u6210)\uFF0C\u53EA\u9700\u914D\u7F6E\u5373\u53EF\uFF0C\u614E\u7528\uFF0C\u6709\u4E9B\u63A5\u53E3\u8981\u8003\u8651\u5230\u5E42\u7B49\u6027
+  # 开启重试机制，结合 Ribbon(默认集成)，只需配置即可，慎用，有些接口要考虑到幂等性，D 版之后默认：false
   retryable: true

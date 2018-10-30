@@ -29,6 +29,7 @@ public class GoodsController {
     )
     public String getPort() {
 
+//        throw new IllegalStateException();
         return goodsFeign.getPort();
 
     }

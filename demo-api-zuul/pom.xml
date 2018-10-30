@@ -41,6 +41,14 @@
         </dependency>
         <!-- Spring Boot 相关 END -->
 
+        <!-- Spring 相关 STAET -->
+        <!-- 重试 -->
+        <dependency>
+            <groupId>org.springframework.retry</groupId>
+            <artifactId>spring-retry</artifactId>
+        </dependency>
+        <!-- Spring 相关 END -->
+
         <!-- 第三方工具 START -->
         <!-- Http Client 支持 -->
         <dependency>
