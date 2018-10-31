@@ -16,6 +16,18 @@ spring:
       retry:
         # 重试开关，默认：true
         enabled: true
+  servlet:
+    multipart:
+      # 是否启用分段上传支持，默认：true
+      enabled: true
+      # 最大单个文件大小。值可以使用后缀“MB”或“KB”分别表示兆字节或千字节。默认：1MB
+      max-file-size: 20MB
+      # 最大请求大小。值可以使用后缀“MB”或“KB”分别表示兆字节或千字节。默认：10MB
+      max-request-size: 100MB
+      # 文件写入磁盘的阈值，当上传文件达到 1M 事开始写入磁盘。值可以使用后缀“MB”或“KB”分别表示兆字节或千字节。默认：0
+      file-size-threshold: 1MB
+      # 上传文件的临时位置
+      location: /
 
 ### 日志配置
 logback:
