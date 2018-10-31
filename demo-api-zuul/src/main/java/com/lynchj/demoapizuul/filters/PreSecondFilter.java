@@ -34,7 +34,8 @@ public class PreSecondFilter extends ZuulFilter {
     @Override
     public boolean shouldFilter() {
         RequestContext ctx = RequestContext.getCurrentContext();
-        return (boolean) ctx.get(SessionContants.LOGIC_IS_SUCCESS);
+        Object logicIsSuccess = ctx.get(SessionContants.LOGIC_IS_SUCCESS);
+        return logicIsSuccess == null ? false : (boolean) logicIsSuccess;
     }
 
     @Override
