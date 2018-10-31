@@ -55,6 +55,12 @@
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
         </dependency>
+        <!-- 支持 Zuul Server 灰度发布控制 -->
+        <dependency>
+            <groupId>io.jmnarloch</groupId>
+            <artifactId>ribbon-discovery-filter-spring-cloud-starter</artifactId>
+            <version>${ribbon-discovery-filter-spring-cloud-starter.version}</version>
+        </dependency>
         <!-- 第三方工具 END -->
     </dependencies>
 

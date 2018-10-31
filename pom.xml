@@ -38,6 +38,7 @@
         <feign-form-spring.version>3.0.3</feign-form-spring.version>
         <spring-boot-admin-starter-client.version>2.0.4</spring-boot-admin-starter-client.version>
         <spring-boot-admin-starter-server.version>2.0.4</spring-boot-admin-starter-server.version>
+        <ribbon-discovery-filter-spring-cloud-starter.version>2.1.0</ribbon-discovery-filter-spring-cloud-starter.version>
     </properties>
 
     <dependencyManagement>
