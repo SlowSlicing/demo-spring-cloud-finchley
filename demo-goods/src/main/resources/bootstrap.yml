@@ -41,6 +41,10 @@ management:
       exposure:
         # 开启指定端点、所有端点
         include: '*'
+  endpoint:
+    health:
+      # 总是表示详细信息的显示
+      show-details: always
 
 ### 注册中心配置
 eureka:

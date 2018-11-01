@@ -26,6 +26,30 @@ spring:
       client:
         # 基于 Spring Boot 项目的监控地址
         url: 'http://localhost:1700'
+  cloud:
+    config:
+      # 分支，默认：master
+      label: master
+      # 配置中心地址
+      uri: http://localhost:8887
+      # 用于获取远程属性的名称
+      name: demo-spring-cloud
+      # 获取远程配置时使用的配置文件属于什么环境
+      profile: dev
+      # 链接远程服务器时要使用的用户名（HTTP Basic），如果需要
+      # username:
+      # 链接远程服务器时要使用的密码（HTTP Basic），如果需要
+      # password:
+  # RabbitMQ 配置
+  rabbitmq:
+    # 地址
+    host: localhost
+    # 端口
+    port: 5672
+    # 用户名
+    username: admin
+    # 密码
+    password: nS8KiyIu0Y7LGbvE
 
 ### 日志配置
 logback:
@@ -41,6 +65,10 @@ management:
       exposure:
         # 开启指定端点、所有端点
         include: '*'
+  endpoint:
+    health:
+      # 总是表示详细信息的显示
+      show-details: always
 
 ### 注册中心配置
 eureka:
