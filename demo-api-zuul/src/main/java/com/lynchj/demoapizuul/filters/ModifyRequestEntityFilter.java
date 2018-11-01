@@ -8,6 +8,7 @@ import com.netflix.zuul.exception.ZuulException;
 import com.netflix.zuul.http.HttpServletRequestWrapper;
 import com.netflix.zuul.http.ServletInputStreamWrapper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StreamUtils;
@@ -56,27 +57,29 @@ public class ModifyRequestEntityFilter extends ZuulFilter {
                 in = ctx.getRequest().getInputStream();
             }
             String requestEntityStr = StreamUtils.copyToString(in, Charset.forName(charset));
-            requestEntityStr = URLDecoder.decode(requestEntityStr, charset);
-            JSONObject requestEntityJson = JSONObject.parseObject(requestEntityStr);
-            // 新增参数
-            requestEntityJson.put("newParam", "1111111");
-            byte[] requestEntityBytes = requestEntityJson.toJSONString().getBytes(charset);
-            ctx.setRequest(new HttpServletRequestWrapper(ctx.getRequest()) {
-                @Override
-                public ServletInputStream getInputStream() throws IOException {
-                    return new ServletInputStreamWrapper(requestEntityBytes);
-                }
+            if (StringUtils.isNotBlank(requestEntityStr)) {
+                requestEntityStr = URLDecoder.decode(requestEntityStr, charset);
+                JSONObject requestEntityJson = JSONObject.parseObject(requestEntityStr);
+                // 新增参数
+                requestEntityJson.put("newParam", "1111111");
+                byte[] requestEntityBytes = requestEntityJson.toJSONString().getBytes(charset);
+                ctx.setRequest(new HttpServletRequestWrapper(ctx.getRequest()) {
+                    @Override
+                    public ServletInputStream getInputStream() throws IOException {
+                        return new ServletInputStreamWrapper(requestEntityBytes);
+                    }
 
-                @Override
-                public int getContentLength() {
-                    return requestEntityBytes.length;
-                }
+                    @Override
+                    public int getContentLength() {
+                        return requestEntityBytes.length;
+                    }
 
-                @Override
-                public long getContentLengthLong() {
-                    return requestEntityBytes.length;
-                }
-            });
+                    @Override
+                    public long getContentLengthLong() {
+                        return requestEntityBytes.length;
+                    }
+                });
+            }
         } catch (Exception e) {
             // 用来给后面的 Filter 标识，是否继续执行
             ctx.set(SessionContants.LOGIC_IS_SUCCESS, false);
@@ -84,7 +87,7 @@ public class ModifyRequestEntityFilter extends ZuulFilter {
             ctx.setResponseBody(String.format(SessionContants.ERROR_RESPONSE_BODY, "修改请求体出错"));
             // 对该请求禁止路由，禁止访问下游服务
             ctx.setSendZuulResponse(false);
-            log.error("【修改请求体 Filter】-出错了：{}", ExceptionUtils.getStackFrames(e));
+            log.error("【修改请求体 Filter】-出错了：{}", ExceptionUtils.getStackTrace(e));
         }
 
         ctx.addZuulRequestHeader("newHeader", "111111");
