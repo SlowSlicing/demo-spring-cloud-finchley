@@ -25,6 +25,7 @@
         <module>demo-hystrix-dashboard</module>
         <module>demo-admin-server</module>
         <module>demo-api-zuul</module>
+        <module>demo-config-server</module>
     </modules>
 
     <properties>
