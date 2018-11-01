@@ -1,6 +1,21 @@
 server:
   # 项目端口号
   port: 11100
+  # Undertow 服务器优化
+  undertow:
+    # 设置 IO 线程数，它主要执行非阻塞的任务，
+    # 它们会负责多个连接，默认设置每个 CPU 核心有一个线程。
+    # 不要设置过大，如果过大，启动项日会报错：打开文件数过多
+    io-threads: 12
+    # 阳塞任务线程数，当执行类似 Servlet 请求阻塞 IO 操作，
+    # Undertow 会从这个线程池中取得线程。它的值设置取决于系统线程执行任务的阻塞系数，
+    # 默认值：IO 线程数 * 8
+    worker-threads: 96
+    # 是否分配直接内存（NIO 直接分配的是堆外内存）
+    direct-buffers: true
+    # 每块 buffer 的空间大小，空间越小利用越充分，
+    # 不要设置太大，以免影响其他应用，合适即可
+    buffer-size: 1024
 
 spring:
   application:
@@ -101,7 +116,7 @@ ribbon:
   # 同一台实例最大重试次数,不包括首次调用
   MaxAutoRetries: 0
   # 重试负载均衡其他的实例最大重试次数,不包括首次server
-  MaxAutoRetriesNextServer: 1
+  MaxAutoRetriesNextServer: 0
   # 是否所有操作都重试，POST请求注意多次提交错误。
   # 默认false，设定为false的话，只有get请求会重试
   OkToRetryOnAllOperations: true
@@ -159,6 +174,8 @@ hystrix:
       execution:
         # 熔断器配置
         isolation:
+          # 隔离策略，线程池隔离机制，如果不配置，默认配置：THREAD
+          strategy: THREAD
           thread:
             # 熔断器超时时间，默认：1000/毫秒
             timeoutInMilliseconds: 18000
@@ -173,8 +190,8 @@ hystrix:
   threadpool:
     defalut:
       # 当使用线程隔离策略时，线程池的核心大小
-      coreSize: 10
+      coreSize: 20
       # 当 Hystrix 隔离策略为线程池隔离模式时，最大线程池大小的配置，在 `1.5.9` 版本中还需要配置 `allowMaximumSizeToDivergeFromCoreSize` 为 true
-      maximumSize: 10
+      maximumSize: 30
       # 此属性语序配置的 maximumSize 生效
       allowMaximumSizeToDivergeFromCoreSize: true

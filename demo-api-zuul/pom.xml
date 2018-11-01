@@ -61,6 +61,11 @@
             <artifactId>ribbon-discovery-filter-spring-cloud-starter</artifactId>
             <version>${ribbon-discovery-filter-spring-cloud-starter.version}</version>
         </dependency>
+        <!-- OKHttp 支持 -->
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+        </dependency>
         <!-- 第三方工具 END -->
     </dependencies>
 

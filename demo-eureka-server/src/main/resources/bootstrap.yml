@@ -13,6 +13,21 @@ server:
     key-store-password: 123456
     # 存储类型
     key-store-type: PKCS12
+  # Undertow 服务器优化
+  undertow:
+    # 设置 IO 线程数，它主要执行非阻塞的任务，
+    # 它们会负责多个连接，默认设置每个 CPU 核心有一个线程。
+    # 不要设置过大，如果过大，启动项日会报错：打开文件数过多
+    io-threads: 12
+    # 阳塞任务线程数，当执行类似 Servlet 请求阻塞 IO 操作，
+    # Undertow 会从这个线程池中取得线程。它的值设置取决于系统线程执行任务的阻塞系数，
+    # 默认值：IO 线程数 * 8
+    worker-threads: 96
+    # 是否分配直接内存（NIO 直接分配的是堆外内存）
+    direct-buffers: true
+    # 每块 buffer 的空间大小，空间越小利用越充分，
+    # 不要设置太大，以免影响其他应用，合适即可
+    buffer-size: 1024
 
 spring:
   application:
@@ -35,7 +50,7 @@ eureka:
     secure-port: ${server.port}
     # 指示是否应为流量启用安全端口
     secure-port-enabled: true
-    # 关闭非安全端口
+    # 是否开启非安全端口
     non-secure-port-enabled: false
     home-page-url: https://${eureka.instance.hostname}:${server.port}/
     status-page-url: https://${eureka.instance.hostname}:${server.port}/actuator/info

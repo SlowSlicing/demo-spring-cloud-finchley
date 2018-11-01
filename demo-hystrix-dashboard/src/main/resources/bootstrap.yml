@@ -1,0 +1,57 @@
+server:
+  # 项目端口号
+  port: 9090
+  # Undertow 服务器优化
+  undertow:
+    # 设置 IO 线程数，它主要执行非阻塞的任务，
+    # 它们会负责多个连接，默认设置每个 CPU 核心有一个线程。
+    # 不要设置过大，如果过大，启动项日会报错：打开文件数过多
+    io-threads: 12
+    # 阳塞任务线程数，当执行类似 Servlet 请求阻塞 IO 操作，
+    # Undertow 会从这个线程池中取得线程。它的值设置取决于系统线程执行任务的阻塞系数，
+    # 默认值：IO 线程数 * 8
+    worker-threads: 96
+    # 是否分配直接内存（NIO 直接分配的是堆外内存）
+    direct-buffers: true
+    # 每块 buffer 的空间大小，空间越小利用越充分，
+    # 不要设置太大，以免影响其他应用，合适即可
+    buffer-size: 1024
+
+spring:
+  application:
+    # Spring Boot 项目实例名称
+    name: demo-hystrix-dashboard
+
+### 日志配置
+logback:
+  spring:
+    level: INFO
+  project:
+    level: INFO
+
+### 注册中心配置
+eureka:
+  instance:
+    # 主机名
+    hostname: localhost
+    # 使用 ip 注册到注册中心实例化
+    prefer-ip-address: true
+  client:
+    secure-port-enabled: true
+    ssl:
+      key-store: EurekaClient.p12
+      key-store-password: 123456
+    security:
+      user:
+        name: eureka-server
+        password: 8e9lx7LuP3436gfsg
+    # Spring Cloud Eureka 注册中心地址
+    service-url:
+      defaultZone: https://${eureka.client.security.user.name}:${eureka.client.security.user.password}@${eureka.instance.hostname}:8761/eureka/
+    # 针对新服务上线, Eureka client获取不及时的问题，在测试环境，可以适当提高Client端拉取Server注册信息的频率，默认：30秒
+    registry-fetch-interval-seconds: 30
+
+### Hystrix Turbin 配置
+turbine:
+  app-config: demo-goods,demo-order,demo-api-zuul
+  cluster-name-expression: "'default'"
