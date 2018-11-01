@@ -35,7 +35,7 @@ eureka:
     secure-port: ${server.port}
     # 指示是否应为流量启用安全端口
     secure-port-enabled: true
-    # 关闭非安全端口
+    # 是否开启非安全端口
     non-secure-port-enabled: false
     home-page-url: https://${eureka.instance.hostname}:${server.port}/
     status-page-url: https://${eureka.instance.hostname}:${server.port}/actuator/info
