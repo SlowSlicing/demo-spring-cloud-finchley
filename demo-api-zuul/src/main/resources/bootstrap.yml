@@ -1,6 +1,21 @@
 server:
   # 项目端口号
   port: 18000
+  # Undertow 服务器优化
+  undertow:
+    # 设置 IO 线程数，它主要执行非阻塞的任务，
+    # 它们会负责多个连接，默认设置每个 CPU 核心有一个线程。
+    # 不要设置过大，如果过大，启动项日会报错：打开文件数过多
+    io-threads: 12
+    # 阳塞任务线程数，当执行类似 Servlet 请求阻塞 IO 操作，
+    # Undertow 会从这个线程池中取得线程。它的值设置取决于系统线程执行任务的阻塞系数，
+    # 默认值：IO 线程数 * 8
+    worker-threads: 96
+    # 是否分配直接内存（NIO 直接分配的是堆外内存）
+    direct-buffers: true
+    # 每块 buffer 的空间大小，空间越小利用越充分，
+    # 不要设置太大，以免影响其他应用，合适即可
+    buffer-size: 1024
 
 spring:
   application:
@@ -115,6 +130,8 @@ hystrix:
       execution:
         # 熔断器配置
         isolation:
+          # 隔离策略，线程池隔离机制，如果不配置，默认配置：THREAD
+          strategy: THREAD
           thread:
             # 熔断器超时时间，默认：1000/毫秒
             timeoutInMilliseconds: 20000
@@ -129,9 +146,9 @@ hystrix:
   threadpool:
     defalut:
       # 当使用线程隔离策略时，线程池的核心大小
-      coreSize: 10
+      coreSize: 20
       # 当 Hystrix 隔离策略为线程池隔离模式时，最大线程池大小的配置，在 `1.5.9` 版本中还需要配置 `allowMaximumSizeToDivergeFromCoreSize` 为 true
-      maximumSize: 10
+      maximumSize: 30
       # 此属性语序配置的 maximumSize 生效
       allowMaximumSizeToDivergeFromCoreSize: true
 
@@ -164,3 +181,19 @@ zuul:
   add-host-header: true
   # 开启重试机制，结合 Ribbon(默认集成)，只需配置即可，慎用，有些接口要考虑到幂等性，D 版之后默认：false
   retryable: true
+  # 路由模式更改为 线程池隔离模式
+  ribbon-isolation-strategy: THREAD
+  thread-pool:
+    # 每个路由都有自己的线程池
+    use-separate-thread-pools: true
+    # 指定一个线程池前缀方便调试
+    thread-pool-key-prefix: apizuul
+  host:
+    # 连接超时，针对使用 url 路由的情况
+    connect-timeout-millis: 2000
+    # 响应超时，针对使用 url 路由的情况
+    socket-timeout-millis: 8000
+    # 最大连接数
+    max-total-connections: 200
+    # 最大路由数
+    max-per-route-connections: 20
