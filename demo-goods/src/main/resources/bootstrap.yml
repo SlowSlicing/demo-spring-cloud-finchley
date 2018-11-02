@@ -26,6 +26,42 @@ spring:
       client:
         # 基于 Spring Boot 项目的监控地址
         url: 'http://localhost:1700'
+        instance:
+          service-base-url: 'http://localhost:1700'
+  cloud:
+    config:
+      ## 自定义配置项
+      auto-refresh-config:
+        # 是否开启自动刷新配置
+        enabled: false
+        # 间隔时间，单位：ms
+        refresh-interval: 5000
+      # 分支，默认：master
+      label: master
+      # 用于获取远程属性的名称
+      name: demo-spring-cloud
+      # 获取远程配置时使用的配置文件属于什么环境
+      profile: dev
+      # 链接远程服务器时要使用的用户名（HTTP Basic），如果需要
+      username: config-server
+      # 链接远程服务器时要使用的密码（HTTP Basic），如果需要
+      password: 8e9lx7LuP3436gfsg
+      # 服务发现
+      discovery:
+        # 是否开启服务发现
+        enabled: true
+        # 配置中心 实例名
+        service-id: demo-config-server
+  # RabbitMQ 配置
+  rabbitmq:
+    # 地址
+    host: localhost
+    # 端口
+    port: 5672
+    # 用户名
+    username: admin
+    # 密码
+    password: nS8KiyIu0Y7LGbvE
 
 ### 日志配置
 logback:
@@ -41,6 +77,10 @@ management:
       exposure:
         # 开启指定端点、所有端点
         include: '*'
+  endpoint:
+    health:
+      # 总是表示详细信息的显示
+      show-details: always
 
 ### 注册中心配置
 eureka:
@@ -50,9 +90,12 @@ eureka:
     # 使用 ip 注册到注册中心实例化
     prefer-ip-address: true
   client:
-    secure-port-enabled: true
+    # 是否开启 Https 注册到注册中心，与高可用的配置中心有冲突
+    secure-port-enabled: false
     ssl:
+      # 开启 Https 注册到注册中心使用的证书
       key-store: EurekaClient.p12
+      # 开启 Https 注册到注册中心使用的证书密码
       key-store-password: 123456
     security:
       user:
@@ -60,7 +103,7 @@ eureka:
         password: 8e9lx7LuP3436gfsg
     # Spring Cloud Eureka 注册中心地址
     service-url:
-      defaultZone: https://${eureka.client.security.user.name}:${eureka.client.security.user.password}@${eureka.instance.hostname}:8761/eureka/
+      defaultZone: http://${eureka.client.security.user.name}:${eureka.client.security.user.password}@${eureka.instance.hostname}:8761/eureka/
     # 针对新服务上线, Eureka client获取不及时的问题，在测试环境，可以适当提高Client端拉取Server注册信息的频率，默认：30秒
     registry-fetch-interval-seconds: 30
 
