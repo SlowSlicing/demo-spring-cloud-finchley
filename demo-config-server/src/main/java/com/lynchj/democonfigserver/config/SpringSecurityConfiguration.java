@@ -1,4 +1,4 @@
-package com.lynchj.demoeurekaserver.config;
+package com.lynchj.democonfigserver.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

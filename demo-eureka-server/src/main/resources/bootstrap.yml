@@ -4,7 +4,7 @@ server:
   # SSL 配置
   ssl:
     # 开启 SSL 认证
-    enabled: true
+    enabled: false
     # 证书别名
     key-alias: eurekaserver
     # 证书存放路径
@@ -31,6 +31,7 @@ server:
 
 spring:
   application:
+    # Spring Boot 项目实例名称
     name: demo-eureka-server
   # 开启安全控制
   security:
@@ -39,6 +40,32 @@ spring:
       name: eureka-server
       # 密码
       password: 8e9lx7LuP3436gfsg
+  boot:
+    admin:
+      client:
+        # 基于 Spring Boot 项目的监控地址
+        url: 'http://localhost:1700'
+        instance:
+          service-base-url: 'http://localhost:1700'
+
+### 日志配置
+logback:
+  spring:
+    level: INFO
+  project:
+    level: INFO
+
+### 端点控制
+management:
+  endpoints:
+    web:
+      exposure:
+        # 开启指定端点、所有端点
+        include: 'health'
+  endpoint:
+    health:
+      # 总是表示详细信息的显示
+      show-details: always
 
 eureka:
   instance:
@@ -56,9 +83,12 @@ eureka:
     status-page-url: https://${eureka.instance.hostname}:${server.port}/actuator/info
     health-check-url: https://${eureka.instance.hostname}:${server.port}/actuator/health
   client:
-    secure-port-enabled: true
+    # 是否开启 Https 注册到注册中心，与高可用的配置中心有冲突
+    secure-port-enabled: false
     ssl:
+      # 开启 Https 注册到注册中心使用的证书
       key-store: EurekaClient.p12
+      # 开启 Https 注册到注册中心使用的证书密码
       key-store-password: 123456
     # 此实例是否从注册中心获取注册信息
     fetch-registry: false
@@ -67,7 +97,7 @@ eureka:
     # 注册地址
     service-url:
       # 默认注册分区地址
-      defaultZone: https://${eureka.instance.hostname}:${server.port}/eureka/
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
   server:
     # 同步为空时，等待时间
     wait-time-in-ms-when-sync-empty: 0
