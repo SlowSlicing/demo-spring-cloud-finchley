@@ -27,4 +27,10 @@ public interface GoodsFeign {
     )
     String getPortByPost();
 
+    @RequestMapping(
+            value = "/goods/getBoolean",
+            produces = MediaType.TEXT_PLAIN_VALUE
+    )
+    Boolean getBoolean();
+
 }

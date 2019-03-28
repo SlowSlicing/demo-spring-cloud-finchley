@@ -12,12 +12,12 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.io.IOException;
-import java.util.*;
 
 /**
- * @Author：大漠知秋
- * @Description：拦截使用 Get 请求，并且使用的时 POJO 请求方式的 Feign 请求
- * @CreateDate：2:24 PM 2018/10/25
+ * 拦截使用 Get 请求，并且使用的时 POJO 请求方式的 Feign 请求
+ *
+ * @author 大漠知秋
+ * @date 2019-03-27 17:35
  */
 @Component
 @Slf4j
@@ -26,6 +26,12 @@ public class FeignRequestInterceptor implements RequestInterceptor {
     @Resource
     private ObjectMapper objectMapper;
 
+    /**
+     * 如果是 GET 方式并且 请求体 不为空，那么把请求体转换成请求参数，防止自动转换成 POST 方式
+     *  * 并不推荐使用 GET 方式传输请求体内容，建议更改为 POST 方式
+     *
+     * @param template Feign 低层发送 Http 请求模板工具
+     */
     @Override
     public void apply(RequestTemplate template) {
         if (HttpMethod.GET.name().equals(template.method())
@@ -34,16 +40,23 @@ public class FeignRequestInterceptor implements RequestInterceptor {
                 JsonNode jsonNode = objectMapper.readTree(template.body());
                 template.body(null);
 
-                Map<String, Collection<String>> queries = new HashMap<>();
+                Map<String, Collection<String>> queries = new HashMap<>(16);
                 buildQuery(jsonNode, "", queries);
                 template.queries(queries);
             } catch (IOException e) {
-                log.error("【拦截GET请求POJO方式】-出错了：{}", ExceptionUtils.getStackFrames(e));
+                log.error("【拦截 GET 请求 POJO 方式】-出错了：{}", ExceptionUtils.getStackFrames(e));
                 throw new RuntimeException();
             }
         }
     }
 
+    /**
+     * 构建请求参数
+     *
+     * @param jsonNode 原始数据
+     * @param path json 节点
+     * @param queries 构建购的请求参数集合
+     */
     private void buildQuery(JsonNode jsonNode, String path, Map<String, Collection<String>> queries) {
         // 叶子节点
         if (!jsonNode.isContainerNode()) {

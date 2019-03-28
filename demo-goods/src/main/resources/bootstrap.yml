@@ -62,6 +62,23 @@ spring:
     username: admin
     # 密码
     password: nS8KiyIu0Y7LGbvE
+    # 虚拟主机
+    virtual-host: dev
+    # 是否 启动发布者确认
+    publisher-confirms: true
+    cache:
+      channel:
+        # 缓存通道数
+        size: 100
+      listener:
+        simple:
+          retry:
+            # 开启重试
+            enabled: true
+            # 最大重试3次
+            max-attempts: 3
+            # 每次重试间隔
+            initial-interval: 3000
 
 ### 日志配置
 logback:
@@ -85,10 +102,12 @@ management:
 ### 注册中心配置
 eureka:
   instance:
-    # 主机名
+    # 使用指定主机名注册，如果 prefer-ip-address 为 false 的话，prefer-ip-address 为 true 则以 prefer-ip-address 为准
     hostname: localhost
     # 使用 ip 注册到注册中心实例化
     prefer-ip-address: true
+    # 续约频率提高，默认：30
+    leaseRenewalIntervalInseconds: 30
   client:
     # 是否开启 Https 注册到注册中心，与高可用的配置中心有冲突
     secure-port-enabled: false

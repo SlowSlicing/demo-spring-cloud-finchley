@@ -69,10 +69,12 @@ management:
 
 eureka:
   instance:
-    # 主机名
+    # 使用指定主机名注册，如果 prefer-ip-address 为 false 的话，prefer-ip-address 为 true 则以 prefer-ip-address 为准
     hostname: localhost
     # 使用 ip 注册到注册中心实例化
     prefer-ip-address: true
+    # 如果在这个时间段内还没有收到过心跳，Eureka Server 就要剔除掉服务
+    leaseExpirationDurationInSeconds: 90
     # 安全端口
     secure-port: ${server.port}
     # 指示是否应为流量启用安全端口
@@ -116,5 +118,3 @@ eureka:
     # use-read-only-response-cache: false
     # 指定每分钟需要收到的续约次数的阈值，默认值就是：0.85
     renewal-percent-threshold: 0.85
-    # 续约频率提高，默认：30
-    leaseRenewalIntervalInseconds: 10

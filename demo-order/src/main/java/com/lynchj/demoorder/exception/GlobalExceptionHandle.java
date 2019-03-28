@@ -18,6 +18,7 @@ public class GlobalExceptionHandle {
     @ResponseBody
     public String handle(Exception e) {
         if (e instanceof RuntimeException) {
+            e.printStackTrace();
             return "demo-order-全局捕获-自定义的错误信息";
         } else {
             return "demo-order-全局捕获-系统繁忙，请稍后再试";

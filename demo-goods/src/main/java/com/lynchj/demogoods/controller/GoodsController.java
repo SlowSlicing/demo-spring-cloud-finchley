@@ -40,4 +40,22 @@ public class GoodsController {
 
     }
 
+    private Integer num = 1;
+
+    @RequestMapping(
+            value = "/getBoolean",
+            method = RequestMethod.GET,
+            produces = MediaType.TEXT_PLAIN_VALUE
+    )
+    Boolean getBoolean() {
+
+        num++;
+        if (num % 2 == 0) {
+            return false;
+        } else {
+            return true;
+        }
+
+    }
+
 }
